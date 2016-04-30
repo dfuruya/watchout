@@ -1,6 +1,9 @@
 // start slingin' some d3 here.
 
 var collisionCount = 0;
+var currentScore = 0;
+var highScore = 0;
+
 var svg = d3.select('.board')
   .append('svg')
   .attr({
@@ -97,9 +100,29 @@ var checkCollision = function() {
       d3.select('.collisions')
         .select('span')
         .text(++collisionCount);
+      // check the high score
+      if (highScore < currentScore){
+        highScore = currentScore;
+        setHighScore();
+      }
+      currentScore = 0;
     }
   });
 
 };
 
+var setHighScore = function () {
+  d3.select('.highscore')
+    .select('span')
+    .text(highScore);
+}
+var incrementScore = function() {
+  d3.select('.current')
+  .select('span')
+  .text(++currentScore);
+}
+
+// timer function calls
+
 d3.timer(checkCollision);
+d3.timer(incrementScore);
