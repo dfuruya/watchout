@@ -7,7 +7,7 @@ var svg = d3.select('.board')
     width: window.innerWidth,
     height: window.innerHeight
   })
-  .style("background-color","#32354A");
+  .style('background-color', '#32354A');
 
 var rand = function() {
   var something = 30;
@@ -52,7 +52,7 @@ var drag = d3.behavior.drag()
       x: coordinates[0]
     });
   });
-  
+
 var player = svg.append('svg:text')
   .attr({
     x: window.innerWidth / 2,
