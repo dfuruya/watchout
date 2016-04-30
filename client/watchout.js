@@ -1,6 +1,6 @@
 // start slingin' some d3 here.
 
-
+var collisionCount = 0;
 var svg = d3.select('.board')
   .append('svg')
   .attr({
@@ -42,20 +42,17 @@ var move = function() {
     return rand() * 30;
   })
   .each('end', move);
-
 };
 
 var drag = d3.behavior.drag()
   .on('drag', function() {
     var coordinates = d3.mouse(this);
-    console.log('I\'m being dragged');
     d3.select(this).attr({
       y: coordinates[1],
       x: coordinates[0]
     });
   });
   
-
 var player = svg.append('svg:text')
   .attr({
     x: window.innerWidth / 2,
@@ -68,5 +65,41 @@ var player = svg.append('svg:text')
     'text-shadow': '0px 0px 30px #FF1C5C'
   })
   .call(drag);
-  
+
+// invoke enemy movement
 move();
+
+
+// collision detection
+
+var checkCollision = function() {
+  // get player's position
+  var playerX = player.attr('x');
+  var playerY = player.attr('y');
+  // get ALL of the enemy's positions
+  enemies.each(function(d, i) {
+    var enemyX = d3.select(this).attr('cx');
+    var enemyY = d3.select(this).attr('cy');
+    // if player's position - range <= enemy's position
+    var distX = Math.abs(playerX - enemyX);
+    var distY = Math.abs(playerY - enemyY);
+    if (distX < 20 && distY < 20) {
+      // change color of player
+      player.attr({
+        'fill': '#FF911C'
+      })
+      .transition()
+      .duration(1000)
+      .attr({
+        'fill': '#FF1C5C'
+      });
+      // increment collision count
+      d3.select('.collisions')
+        .select('span')
+        .text(++collisionCount);
+    }
+  });
+
+};
+
+d3.timer(checkCollision);
